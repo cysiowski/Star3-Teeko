@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package star3.project;
 
 public enum GameStatus {
 	REDTURN,
