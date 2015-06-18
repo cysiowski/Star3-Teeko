@@ -90,8 +90,8 @@ public class Star3Teeko extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
-		win = new Texture("Win.jpg");
-		lose = new Texture("Lose.jpg");
+		win = new Texture("Win.png");
+		lose = new Texture("Lose.png");
 		red = new Texture("A.png");
 		black = new Texture("B.png");
 		texT = new Texture("T.png");
@@ -217,23 +217,23 @@ public class Star3Teeko extends ApplicationAdapter {
 			for (int x = 0; x < 5; x++)
 				for (int y = 0; y < 5; y++) {
 					if (fields[x][y] == Field.X) {
-						batch.draw(red, 102 * 5 - x * 102
-								- (red.getWidth() / 2 - 102 / 2) - 102, 102 * 5
-								- y * 102 - (red.getWidth() / 2 - 102 / 2)
-								- 102);
+						batch.draw(red, 153 * 5 - x * 153
+								- (red.getWidth() / 2 - 153 / 2) - 153, 153 * 5
+								- y * 153 - (red.getWidth() / 2 - 153 / 2)
+								- 153);
 
 					}
 					if (fields[x][y] == Field.O) {
-						batch.draw(black, 102 * 5 - x * 102
-								- (red.getWidth() / 2 - 102 / 2) - 102, 102 * 5
-								- y * 102 - (red.getWidth() / 2 - 102 / 2)
-								- 102);
+						batch.draw(black, 153 * 5 - x * 153
+								- (red.getWidth() / 2 - 153 / 2) - 153, 153 * 5
+								- y * 153 - (red.getWidth() / 2 - 153 / 2)
+								- 153);
 					}
 					if (fields[x][y] == Field.T) {
-						batch.draw(texT, 102 * 5 - x * 102
-								- (red.getWidth() / 2 - 102 / 2) - 102, 102 * 5
-								- y * 102 - (texT.getWidth() / 2 - 102 / 2)
-								- 102);
+						batch.draw(texT, 153 * 5 - x * 153
+								- (red.getWidth() / 2 - 153 / 2) - 153, 153 * 5
+								- y * 153 - (texT.getWidth() / 2 - 153 / 2)
+								- 153);
 					}
 				}
 		} else if (gameStatus == GameStatus.REDWIN) {

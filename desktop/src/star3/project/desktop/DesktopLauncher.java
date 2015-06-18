@@ -9,9 +9,9 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		
 		config.title = "Teeko";
-		config.width = 512;
-		config.height = 512;
-		
+		config.width = 768;
+		config.height = 768;
+
 		new LwjglApplication(new Star3Teeko(), config);
 	}
 }
