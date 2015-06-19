@@ -35,7 +35,7 @@ public class JavaService
 		} 
 		catch (NumberFormatException e) 
 		{
-		      System.out.println("Wprowadzona wartoœæ nie jest liczb¹. Spróbuj ponownie wprowadziæ poprawn¹ wartoœæ.");
+		      System.out.println("Wprowadzona wartoï¿½ï¿½ nie jest liczbï¿½. Sprï¿½buj ponownie wprowadziï¿½ poprawnï¿½ wartoï¿½ï¿½.");
 		      putPawnHuman(playboard, ps, number, xy);
 		}		
 	}
@@ -77,19 +77,19 @@ public class JavaService
 		
 		if(xynew == xyold-10)
 		{
-			direction = "g";
+			direction = "l";
 		}
 		else if(xynew == xyold+10)
 		{
-			direction = "d";
+			direction = "p";
 		}
 		else if(xynew == xyold-1)
 		{
-			direction = "l";
+			direction = "g";
 		}
 		else if(xynew == xyold+1)
 		{
-			direction = "p";
+			direction = "d";
 		}
 		else if(xynew == xyold-11)
 		{
@@ -315,11 +315,11 @@ public class JavaService
 		if(player.equals("B"))
 		{
 			paintPlayboard(playboard);
-			System.out.println("\nGra skoñczona. Wygra³eœ!");
+			System.out.println("\nGra skoï¿½czona. Wygraï¿½eï¿½!");
 		}
 		else
 		{
-			System.out.println("\nGra skoñczona. Przegra³eœ!");
+			System.out.println("\nGra skoï¿½czona. Przegraï¿½eï¿½!");
 		}
 	}
 	
@@ -328,7 +328,7 @@ public class JavaService
 		String variable;
 		
 		System.out.println("\n\nY/X   1    2    3    4    5");
-		System.out.print("    ———— ———— ———— ———— ———— \n1  ");
+		System.out.print("    ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ \n1  ");
 		
 		for(int i=0;i<playboard.size();i++)
 		{
@@ -348,11 +348,11 @@ public class JavaService
 				System.out.println("|");
 				if(i!=24)
 				{
-					System.out.print("    ———— ———— ———— ———— ———— \n" + ((i+6)/5) + "  ");
+					System.out.print("    ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ \n" + ((i+6)/5) + "  ");
 				}
 				else
 				{
-					System.out.println("    ———— ———— ———— ———— ———— ");
+					System.out.println("    ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ");
 				}
 			}
 		}

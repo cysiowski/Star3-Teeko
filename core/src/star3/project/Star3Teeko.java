@@ -276,6 +276,7 @@ public class Star3Teeko extends ApplicationAdapter {
 			int fieldX = 0, fieldY = 0;
 			if (countPlayerBPawns < 4) {
 				countPlayerBPawns++;
+				ps.setCoord("R");
 				int xy = js.putPawnAI(playboard, ps, countPlayerBPawns);
 				System.out.println(xy);
 				if(xy%5 != 0)
@@ -308,12 +309,18 @@ public class Star3Teeko extends ApplicationAdapter {
 				fields[fieldX][fieldY] = Field.X;
 				gameStatus = GameStatus.BLACKTURN;
 
+				if(countPlayerBPawns == 4) {
+					ps.setCoordLast();
+				}
+
 			} else
 
 			// if red player clicked on his own red pawn and there is at least 4
 			// pawns on game deck
 			if (countPlayerBPawns >= 4) {
 				int[] xy = new int[2];
+				ps.move("R");
+
 				xy = js.movePawnAI(playboard, ps);
 				tmpPawn.tmpOwner = Field.X;
 				if(xy[0]%5 != 0)
@@ -374,6 +381,7 @@ public class Star3Teeko extends ApplicationAdapter {
 				}
 				fields[fieldX][fieldY] = Field.X;
 				gameStatus = GameStatus.BLACKTURN;
+
 
 			}
 
@@ -439,6 +447,8 @@ public class Star3Teeko extends ApplicationAdapter {
 					fieldX=0;
 				}
 				int xy = Integer.parseInt(Integer.toString(fieldX+1) + Integer.toString(fieldY+1));
+
+				ps.setCoord("B");
 				js.putPawnHuman(playboard, ps, countPlayerAPawns, xy);
 				gameStatus = GameStatus.REDTURN;
 
@@ -512,7 +522,9 @@ public class Star3Teeko extends ApplicationAdapter {
 				int xynew = Integer.parseInt(Integer.toString(fieldX+1) + Integer.toString(fieldY+1));
 				
 				System.out.println(xyold + " | " + xynew);
-				
+
+
+				ps.move("B");
 				js.movePawnHuman(playboard, ps, xyold, xynew);
 				tmpPawn.reset();
 				gameStatus = GameStatus.REDTURN;

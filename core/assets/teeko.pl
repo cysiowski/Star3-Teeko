@@ -1,5 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%
+%%                 %%
 %%      TEEKO      %%
+%%                 %%
 %%%%%%%%%%%%%%%%%%%%%
 
 :- dynamic position/3.
@@ -91,6 +93,7 @@ calcSet(X, Y, M) :-
     inRange([X, Y], 1, 5),
     not(position(X, Y, _)),
     not(position(_, _, M)).
+
 
 %Set marker on board
 set(X, Y, M) :- nonvar(X), nonvar(Y), nonvar(M), calcSet(X, Y, M), assert(position(X, Y, M)), !.
@@ -210,7 +213,9 @@ calcDouble([],_):-!.
 calcDouble([T|R],L):-member(T,L),calcDouble(R,L).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                         %%
 %%        ROZGRYWKA        %%
+%%                         %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 :- dynamic playerType/2.
@@ -220,45 +225,85 @@ calcDouble([T|R],L):-member(T,L),calcDouble(R,L).
 
 menu:-
         assert(playerType('B', 'czlowiek')), 
-		assert(playerType('R', 'AI')), !,
+		assert(playerType('R', 'AI')),
+        !,
         assert(playerName('B', 'czlowiek')),
         assert(playerName('R', 'AI')),
         assert(firstPlayer('B')),
         assert(aiLevel(3)).
-		
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                    %%
 %%                ROZSTAWIENIE PIONKOW                %%
+%%                                                    %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-placementPos(Pos, Player):-
-        last_marker(Player, Marker), readCoordPos(Pos, Player, Marker), !.
+% placement: placement des pions / on appelle le predicat de placement correspondant au type du joueur
 
+%PIERWSZA FAZA I TRZECIA FAZA
+placement(Player):-
+		writeln('FAZA 1'),
+        not(launchMoves),
+        flipPlayer(Player, Opponent), not(winner(Opponent)), !.
+
+placementLast(Player):-
+		writeln('FAZA 5'),
+		writeln(Player),
+        flipPlayer(Player, Opponent), winner(Opponent), !.
+
+%DRUGA FAZA
+% ruch pionkiem dla czlowieka
+placementPos(Pos, Player):-
+		writeln('FAZA 2'),
+        last_marker(Player, Marker), readCoordPos(Pos, Marker), !.
+
+%CZWARTA FAZA
+% ruch pionkiem dla sztucznej inteligencji
 placementPosAI(PosX, PosY, Player):-
+		writeln('FAZA 3'),
         aiLevel(L), 
 		bestChange(Player, 3, L, M, X, Y), 
 		set(PosX, PosY, X, Y, M), !.
-		
-readCoordPos(Pos, Player, Marker):-
+
+%PIATA FAZA
+% launchMoves: Umożliwia uruchomienie głównej fazy gry, gdy wszystkie elementy są umieszczone
+launchMoves:-
+		writeln('FAZA 4'),
+        not(last_marker('B', _)), not(last_marker('R', _)), !,
+        not(winner('B')), not(winner('R')).
+
+
+% readCoord: lecture des coordonnees saisies pour le pion
+readCoordPos(Pos, Marker):-
         last_marker(Player, Marker),
         name(Pos, CoordChr), getCoord(Marker, CoordChr, X, Y),
         not(position(X, Y, _)), !, set(X, Y, Marker).
-		
+
+% getCoord: obtention des coordonnees du pion saisies par le joueur
 getCoord(_, [], _, _).
 
 getCoord(_, [X, Y], X1, Y1):-
-        X1 is X - 48, Y1 is Y - 48, 
-        inRange([X1, Y1], 1, 5), !.
+        X1 is X - 48, Y1 is Y - 48, % -48 car utilisation du code ascii
+        inRange([X1, Y1], 1, 5), !. % on verifie que les coordonnees saisies sont correctes
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                           %%
 %%             ROZGRYWKA (PRZESTAWIANIE PIONKOW)             %%
+%%                                                           %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	
-getMoveHuman(Move, Player):-
+
+getMove(Player):-
+		writeln('FAZA 1'),
+        flipPlayer(Player, Opponent), not(winner(Opponent)), !.
+		
+getMoveHuman(Player, Move):-
+		writeln('FAZA 3'),
         name(Move, MoveRequestList), consultList(Player, MoveRequestList), !.
 
 getMoveAI(PosX, PosY, PosXO, PosYO):-
+		flipPlayer('R', Opponent), not(winner(Opponent)), !,
         aiLevel(L), bestChange('R', 3, L, Marker, X, Y), move(PosX, PosY, PosXO, PosYO, X, Y, Marker), !.
-
+		
 consultList(Player, [_, AsciiNumber, SimpleMoveAscii]):-
         MarkerNumber is AsciiNumber - 48,
         between(1, 4, MarkerNumber), !,
@@ -273,22 +318,26 @@ consultList(Player, [_, AsciiNumber, FirstMoveAscii, SecondMoveAscii]):-
         name(FirstMove, [FirstMoveAscii]),
         name(SecondMove, [SecondMoveAscii]),
         combineMove(Marker, FirstMove, SecondMove).
-
+		
 simpleMove(Marker, SimpleMove):-
         position(X, Y, Marker),
         possibleMove(X, Y, SimpleMove, NewX, NewY), not(position(NewX, NewY, _)), !,
         move(NewX, NewY, Marker).
 
+% combineMove: deplacements diagonaux
 combineMove(Marker, FirstMove, SecondMove):-
         position(X, Y, Marker),
         possibleMove(X, Y, FirstMove, NewX1, NewY1),
         possibleMove(NewX1, NewY1, SecondMove, NewX2, NewY2),
-        not(position(NewX2, NewY2, _)), !,
+        not(position(NewX2, NewY2, _)), !, % on verifie qu'il n'y a pas de pion sur la case visee
         move(NewX2, NewY2, Marker).
+        %markers(Player, MarkersList), member(Marker, MarkersList),
+        %flipPlayer(Player, Opponent), getMove(Opponent), !. % tour de l'adversaire
 
-possibleMove(X, Y, 'g', X, NewY):- NewY is Y - 1, inRange([NewY], 1, 5), !.
-possibleMove(X, Y, 'd', X, NewY):- NewY is Y + 1, inRange([NewY], 1, 5), !.
-possibleMove(X, Y, 'p', NewX, Y):- NewX is X + 1, inRange([NewX], 1, 5), !.
-possibleMove(X, Y, 'l', NewX, Y):- NewX is X - 1, inRange([NewX], 1, 5), !.
+% possibleMove: mouvements simples possibles
+possibleMove(X, Y, 'g', X, NewY):- NewY is Y - 1, inRange([NewY], 1, 5), !. % up
+possibleMove(X, Y, 'd', X, NewY):- NewY is Y + 1, inRange([NewY], 1, 5), !. % down
+possibleMove(X, Y, 'p', NewX, Y):- NewX is X + 1, inRange([NewX], 1, 5), !. % right
+possibleMove(X, Y, 'l', NewX, Y):- NewX is X - 1, inRange([NewX], 1, 5), !. % left
 
 :- menu.
